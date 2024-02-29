@@ -16,8 +16,9 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController textController=TextEditingController();
   final TextEditingController textController1=TextEditingController();
+  final TextEditingController textController2=TextEditingController();
   final FireStoreService fs=FireStoreService();
-  void openNoteBox(){
+  void openNoteBox({String? docId}){
     showDialog(
         context: context,
         builder: (context)=>AlertDialog(
@@ -27,18 +28,27 @@ class _ChatScreenState extends State<ChatScreen> {
               children: [
                 TextField(
                   controller:textController,
-                  decoration: InputDecoration(hintText: 'Enter text'),
+                  decoration: InputDecoration(hintText: 'Enter Customer Name'),
                 ),
                 TextField(
                   controller:textController1,
-                  decoration: InputDecoration(hintText: 'Enter text'),
+                  decoration: InputDecoration(hintText: 'Enter order details'),
+                ),
+                TextField(
+                  controller:textController2,
+                  decoration: InputDecoration(hintText: 'Enter phone number'),
                 ),
                 ElevatedButton(onPressed: () {
-                  fs.addNotes(textController.text,textController1.text);
+                  if(docId==null) {
+                    fs.addNotes(textController.text, textController1.text,textController2.text);
+                  }else{
+                    fs.UpdateNotes(docId, textController.text, textController1.text, textController2.text);
+                  }
                   // ,textController1.text);//this is to add
                   //clear
                   textController.clear();
                   textController1.clear();
+                  textController2.clear();
                   //close
                   Navigator.pop(context);
                 }, child: Text('SAVE'))
@@ -121,13 +131,38 @@ class _ChatScreenState extends State<ChatScreen> {
                 //get message from each doc
                 Map<String,dynamic> data=document.data() as Map<String,dynamic>;
 
-                String CustomerName=data['text'];
-                String order=data['sender'];
+                String CustomerName=data['customername'];
+                String order=data['customerorder'];
+                String number=data['phoneno'];
 
                 //display as list tile
                  return ListTile(
-                   title:Text(CustomerName),
-                     subtitle:Text(order),
+
+
+                     title:
+                   Column(
+
+                       children: <Widget>[
+                         Text(CustomerName),
+                         Text(order),
+                         Text(number),
+                   ],
+                   ),
+                   trailing: Row(
+                     mainAxisSize: MainAxisSize.min,
+                     children: [
+                       IconButton(
+                         onPressed:() => openNoteBox(docId: docId),
+                         icon: const Icon(Icons.settings),
+
+                       ),
+                       IconButton(
+                         onPressed:() => fs.deleteNotes(docId),
+                         icon: const Icon(Icons.delete),
+
+                       ),
+                     ],
+                   ),
                  );
               },
             );

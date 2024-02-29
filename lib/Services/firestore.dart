@@ -7,11 +7,12 @@ class FireStoreService{
   //get collection of customer details
 final CollectionReference message=FirebaseFirestore.instance.collection('message');
   //create
-  Future<void> addNotes(String notes,String email){
+  Future<void> addNotes(String email,String notes,String number){
     return message.add({
-      'sender': email,
-      'text' : notes,
-      // 'timestamp':TimeStamp.now(),
+      'customername': email,
+      'customerorder' : notes,
+      'phoneno':number,
+
     });
 }
   //read
@@ -20,6 +21,15 @@ final CollectionReference message=FirebaseFirestore.instance.collection('message
     return messageStream;
 }
   //update
-
+Future<void> UpdateNotes(String docId,String newName,String newOrder,String newNumber){
+return message.doc(docId).update({
+  'customername': newName,
+  'customerorder' : newOrder,
+  'phoneno':newNumber,
+});
+}
   //delete
+Future<void> deleteNotes(String docId){
+    return message.doc(docId).delete();
+}
 }
