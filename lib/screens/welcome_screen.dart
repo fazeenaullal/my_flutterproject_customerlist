@@ -19,24 +19,25 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Row(
-              children: <Widget>[
+            // Row(
+            //   children: <Widget>[
                 Hero(
                   tag: 'logo',
                   child: Container(
-                    child: Image.asset('images/logo.png'),
+                    child: Image.asset('images/grandwood.jpg'),
                     height: 60.0,
                   ),
                 ),
                 Text(
-                  'Flash Chat',
+                  '  GrandWood',
+
                   style: TextStyle(
                     fontSize: 45.0,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
-              ],
-            ),
+            //   ],
+            // ),
             SizedBox(
               height: 48.0,
             ),
